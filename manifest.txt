@@ -1,0 +1,2 @@
+src_emp,protect.emp_copy,P
+src_tbl,sensitive.tgt_tbl,S
