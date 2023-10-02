@@ -90,6 +90,13 @@ print(f"CRED DETAILS : URL={url} user={user} pwd={password}")
 bucket = "example-buc-test"
 spark.conf.set('temporaryGcsBucket', bucket)
 
+spark_conf=spark.sparkContext.getConf().get("spark.yarn.tags")
+for member in spark_conf.split(","):
+     if member.startswith("dataproc_job_"):
+          job_label=member.split("_")[2]
+          break
+print(f"Track this job with dataproc ID:{job_label}")
+
 
 # Forming a blank dataframe of target table. This is to get the schema of target table at run time. Can be done on querying INFORMATION_SCHEMA.COLUMNS view
 
@@ -132,20 +139,6 @@ print("Results From SOURCE-------")
 df.show()
 
 print(f"Before casting {df.dtypes}")
-
-# for cols in df.columns:
-#     df=df.withColumn(cols,col(cols).cast('string'))
-
-
-#df.withColumn("crt_date",lit(datetime.datetime.now())).withColumn("prcs_name",lit("LOAD_PRCS"))
-#
-# df.write.option("header",True).option("delimiter","|").csv("gs://example-buc-test/spark_prog/output/run")
-
-# Dynamically changing the source schema into target schemas
-#
-# target_cols = target_df.columns
-# new_df = df.toDF("id","name","city","email","last_upd_dt","crt_date","prcs_name")
-
 #
 # # Dynamically changing the datatype of target dataframe to string to make sure it is sync in BigQuery target table schema
 
@@ -154,7 +147,7 @@ for col in df.columns:
 
 df.printSchema()
 
-new_df=df.select(["*",lit(datetime.datetime.now()).alias("crt_time"),lit("LOAD_PRCS").alias("prcs_name")])
+new_df=df.select(["*",lit(datetime.datetime.now()).alias("crt_time"),lit(job_label).alias("prcs_name")])
 
 
 target_cols = target_df.columns
@@ -162,8 +155,6 @@ cleaned_df=new_df.toDF(*target_cols)
 
 
 
-#cols = [col(s).alias(s.lower()) for s in new_df.columns]
-#cleaned_df=new_df.select(lst)
 print("Results going to TARGET-------")
 cleaned_df.show()
 #
