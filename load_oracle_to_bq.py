@@ -13,20 +13,6 @@ gcloud dataproc jobs submit pyspark \
 '''
 
 
-######################################################################################################################
-# Script Name    : load_oracle_to_bq.py  
-# Script Purpose : This PySpark job extracts the data from on-premises Oracle tables to GCP BigQuery tables 
-# Author         : Deloitte 
-# Creation Date  : 2023-08-28
-
-# Version Track 
-# --------------------------------------------------------------------------------------------------------------------
-# Version        Date          Modified by                 Comments
-# --------------------------------------------------------------------------------------------------------------------
-# 1.0            2023-08-28    Deloitte                    Initial Creation  
-#
-######################################################################################################################
-
 # Initial imports
 
 import json
